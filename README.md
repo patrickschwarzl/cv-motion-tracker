@@ -1,2 +1,4 @@
-# cv-motion-tracker
-Computer vision project for real-time human pose and movement tracking. First clear goal is a pushup-tracker.
+# CV Motion Tracker: Push-Up Counter
+
+A sandbox project to learn computer vision from scratch using Python, OpenCV,...
+First clear goal is a real-time push-up tracker.
