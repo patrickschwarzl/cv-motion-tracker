@@ -2,56 +2,65 @@ import cv2 as cv
 import sys
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent
-VIDEO_PATH = BASE_DIR / "example_videos" / "2026-08-13 22-22-15.mp4"
+VIDEO = "2026-08-13 22-22-15.mp4"
+TRACKER = "MIL"
 
-# available tracker models
-tracker_dict = {
-    "MIL": cv.TrackerMIL_create,
-    "DaSiamRPN": cv.TrackerDaSiamRPN_create,
-    "Nano": cv.TrackerNano_create,
-    "ViT": cv.TrackerVit_create,
-}
+def main():
+    base_dir = Path(__file__).resolve().parent
+    video_path = base_dir / "example_videos" / VIDEO
 
-tracker = tracker_dict["MIL"]()
+    # available tracker models
+    tracker_dict = {
+        "MIL": cv.TrackerMIL_create,
+        "DaSiamRPN": cv.TrackerDaSiamRPN_create,
+        "Nano": cv.TrackerNano_create,
+        "ViT": cv.TrackerVit_create,
+    }
 
-cap = cv.VideoCapture(VIDEO_PATH)
+    tracker = tracker_dict[TRACKER]()
 
-if not cap.isOpened():
-    print("Failed to open file")
-    sys.exit(0)
+    cap = cv.VideoCapture(video_path)
 
-# read and display first frame
-ret, frame = cap.read()
+    if not cap.isOpened():
+        print("Failed to open file")
+        sys.exit(0)
 
-if not ret:
-    print("Exiting early...")
-    sys.exit(0)
-
-cv.imshow("Frame", frame)
-
-# create bounding box
-bounding_box = cv.selectROI("Frame", frame)
-
-# initialize tracker
-tracker.init(frame, bounding_box)
-
-while True:
+    # read and display first frame
     ret, frame = cap.read()
 
     if not ret:
-        print("Terminating...")
+        print("Exiting early...")
         sys.exit(0)
 
-    (success, box) = tracker.update(frame)
+    cv.imshow("Frame", frame)
 
-    if success:
-        (x, y, w, h) = [int(a) for a in box] # coordinates of our bounding box top left corner
-        cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 1)
+    # create bounding box
+    bounding_box = cv.selectROI("Frame", frame)
 
-    cv.imshow('Frame', frame)
+    # initialize tracker
+    tracker.init(frame, bounding_box)
 
-    key = cv.waitKey(10)
-    if key == ord("q") or key == 27:
-        print("Terminating...")
-        sys.exit(0)
+    while True:
+        ret, frame = cap.read()
+
+        if not ret:
+            print("Terminating...")
+            sys.exit(0)
+
+        success, box = tracker.update(frame)
+
+        if success:
+            x, y, w, h = [
+                int(a) for a in box
+            ]  # coordinates of our bounding box top left corner
+            cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 1)
+
+        cv.imshow("Frame", frame)
+
+        key = cv.waitKey(10)
+        if key == ord("q") or key == 27:
+            print("Terminating...")
+            sys.exit(0)
+
+if __name__ == "__main__":
+    main()
