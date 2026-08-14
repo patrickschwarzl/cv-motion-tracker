@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 VIDEO = "2026-08-13 22-22-15.mp4"
-TRACKER = "NANO"
+TRACKER = "MIL"
 
 
 def main():
