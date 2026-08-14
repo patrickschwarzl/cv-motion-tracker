@@ -3,7 +3,8 @@ import sys
 from pathlib import Path
 
 VIDEO = "2026-08-13 22-22-15.mp4"
-TRACKER = "MIL"
+TRACKER = "NANO"
+
 
 def main():
     base_dir = Path(__file__).resolve().parent
@@ -11,10 +12,9 @@ def main():
 
     # available tracker models
     tracker_dict = {
-        "MIL": cv.TrackerMIL_create,
-        "DaSiamRPN": cv.TrackerDaSiamRPN_create,
-        "Nano": cv.TrackerNano_create,
-        "ViT": cv.TrackerVit_create,
+        "MIL": cv.TrackerMIL.create,
+        "CSRT": cv.TrackerCSRT.create,
+        "KCF": cv.TrackerKCF.create,
     }
 
     tracker = tracker_dict[TRACKER]()
@@ -61,6 +61,7 @@ def main():
         if key == ord("q") or key == 27:
             print("Terminating...")
             sys.exit(0)
+
 
 if __name__ == "__main__":
     main()
