@@ -1,6 +1,5 @@
 import sys
 import cv2 as cv
-import numpy as np
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
